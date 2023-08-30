@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
 
-ls -l /usr/bin
-
-hostname
-nvidia-smi -L
+nvidia-smi --query-gpu=uuid,serial --format=csv | awk -v host=`hostname` 'NR>1{print host,$0}'
