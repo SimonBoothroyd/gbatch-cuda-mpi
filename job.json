@@ -4,7 +4,7 @@
       "runnables":[
         {
           "script": {
-            "text": "nvidia-smi --query-gpu=uuid,serial --format=csv | awk -v host=`hostname` 'NR>1{print host,$0}'"
+            "text": "nvidia-smi --query-gpu=uuid,serial --format=csv | awk -v host=`hostname` 'NR>1{print host,$0,\"HOST\"}'"
           }
         },
         { "barrier": {} },
@@ -22,7 +22,7 @@
           "container": {
             "imageUri": "<TAG>",
             "entrypoint": "/bin/bash",
-            "commands": ["-c", "if [ ${BATCH_TASK_INDEX} = 0 ]; then mpirun.openmpi -n ${BATCH_TASK_COUNT} --hostfile ${BATCH_HOSTS_FILE} /opt/run.sh; fi"],
+            "commands": ["-c", "if [ ${BATCH_TASK_INDEX} = 0 ]; then mpirun.openmpi --npernode 1 -n ${BATCH_TASK_COUNT} --hostfile ${BATCH_HOSTS_FILE} /opt/run.sh; fi"],
             "options": "--gpus all --volume /etc:/etc --network host"
           },
           "environment": {"variables": {"OMPI_MCA_plm_rsh_args": "-p 4000", "OMPI_ALLOW_RUN_AS_ROOT": "1", "OMPI_ALLOW_RUN_AS_ROOT_CONFIRM": "1", "CUDA_VISIBLE_DEVICES": "0"}}
