@@ -17,7 +17,7 @@
           "container": {
             "imageUri": "<TAG>",
             "entrypoint": "/bin/bash",
-            "commands": ["-c", "if [ ${BATCH_TASK_INDEX} = 0 ]; then mpirun.openmpi --npernode 1 -n ${BATCH_TASK_COUNT} --hostfile ${BATCH_HOSTS_FILE} --mca btl tcp,sm,self --mca btl_tcp_if_exclude docker0 /opt/main; fi"],
+            "commands": ["-c", "if [ ${BATCH_TASK_INDEX} = 0 ]; then mpirun.openmpi --npernode 1 -n ${BATCH_TASK_COUNT} --hostfile ${BATCH_HOSTS_FILE} --mca btl tcp,vader,self --mca btl_tcp_if_exclude docker0 /opt/main; fi"],
             "options": "--volume /etc:/etc --network host"
           },
           "environment": {"variables": {"OMPI_MCA_plm_rsh_args": "-p 4000", "OMPI_ALLOW_RUN_AS_ROOT": "1", "OMPI_ALLOW_RUN_AS_ROOT_CONFIRM": "1"}}
@@ -32,6 +32,6 @@
   }],
   "logs_policy": {"destination": "CLOUD_LOGGING"},
   "allocationPolicy": {
-    "instances": [{"installGpuDrivers": true, "policy": {"bootDisk": {"image": "batch-debian"}}}]
+    "instances": [{"installGpuDrivers": true, "policy": {"machineType": "g2-standard-4", "bootDisk": {"image": "batch-debian"}}}]
   }
 }
