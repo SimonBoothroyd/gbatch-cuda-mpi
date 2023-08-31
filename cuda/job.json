@@ -3,17 +3,11 @@
     "task_spec":{
       "runnables":[
         {
-          "script": {
-            "text": "nvidia-smi --query-gpu=uuid,serial --format=csv | awk -v host=`hostname` 'NR>1{print host,$0,\"HOST\"}'"
-          }
-        },
-        { "barrier": {} },
-        {
           "container": {
             "imageUri": "<TAG>",
             "entrypoint": "/bin/bash",
             "commands": ["-c", "mkdir -p /run/sshd; /usr/sbin/sshd -p 4000 -D"],
-            "options": "--volume /etc:/etc --network host"
+            "options": "--gpus all --volume /etc:/etc --network host"
           },
           "background": true
         },
