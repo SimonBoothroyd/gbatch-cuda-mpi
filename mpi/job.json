@@ -2,6 +2,7 @@
   "taskGroups":[{
     "task_spec":{
       "runnables":[
+        {"script": {"text": "ip address"}},
         {
           "container": {
             "imageUri": "<TAG>",
