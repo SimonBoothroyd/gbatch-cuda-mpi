@@ -1,8 +1,20 @@
-FROM ubuntu:22.04
+ARG CUDA_VERSION=12.0.0
+
+FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04 as builder
+
+COPY main.cu /opt/main.cu
 
 RUN    apt update                                                                               \
     && apt install --no-install-recommends --yes build-essential libopenmpi-dev openmpi-bin ssh \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*                                                              \
+                                                                                                \
+    && nvcc /opt/main.cu -I/usr/lib/x86_64-linux-gnu/openmpi/include                            \
+                         -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi -o /opt/main
 
-COPY main.c /opt/main.c
-RUN  mpicxx /opt/main.c -o /opt/main
+FROM nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu22.04
+
+COPY --from=builder /opt/main /opt/main
+
+RUN    apt update                                                \
+    && apt install --no-install-recommends --yes openmpi-bin ssh \
+    && rm -rf /var/lib/apt/lists/*
