@@ -1,0 +1,44 @@
+{
+  "taskGroups":[{
+    "task_spec":{
+      "runnables":[
+        {
+          "container": {
+            "imageUri": "<TAG>",
+            "entrypoint": "/bin/bash",
+            "commands": ["-c", "mkdir -p /run/sshd; /usr/sbin/sshd -p 4000 -D"],
+            "options": "--gpus all --volume /etc:/etc --network host"
+          },
+          "background": true
+        },
+        {"barrier": {}},
+        {
+          "container": {
+            "imageUri": "<TAG>",
+            "entrypoint": "/bin/bash",
+            "commands": ["-c", "if [ ${BATCH_TASK_INDEX} = 0 ]; then $(which mpirun) --npernode 1 -n ${BATCH_TASK_COUNT} --hostfile ${BATCH_HOSTS_FILE} /opt/main; fi"],
+            "options": "--gpus all --volume /etc:/etc --network host"
+          }
+        },
+        {"barrier": {}}
+      ],
+      "maxRetryCount": 5,
+      "computeResource": {"cpuMilli": 4000, "memoryMib": 16000},
+      "environment": {
+        "variables": {
+          "OMPI_MCA_plm_rsh_args": "-p 4000",
+          "OMPI_MCA_btl": "tcp,vader,self",
+          "OMPI_MCA_btl_tcp_if_exclude": "docker0,lo",
+          "OMPI_ALLOW_RUN_AS_ROOT": "1",
+          "OMPI_ALLOW_RUN_AS_ROOT_CONFIRM": "1"
+        }
+      }
+    },
+    "task_count": 3,
+    "task_count_per_node": 1,
+    "require_hosts_file": true,
+    "permissive_ssh": true
+  }],
+  "logs_policy": {"destination": "CLOUD_LOGGING"},
+  "allocationPolicy": {"instances": [{"installGpuDrivers": true, "policy": {"accelerators": [{"type": "nvidia-l4", "count": 1}], "bootDisk": {"image": "batch-debian"}}}]}
+}
