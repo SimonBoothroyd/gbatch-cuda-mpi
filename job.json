@@ -10,11 +10,7 @@
             "options": "--gpus all --network host",
             "volumes": [
               "/etc/ssh:/etc/ssh",
-              "/etc/cloudbatch-taskgroup-hosts:/etc/cloudbatch-taskgroup-hosts",
-              "/etc/google_instance_id:/etc/google_instance_id",
-              "/etc/hostname:/etc/hostname",
-              "/etc/hosts:/etc/hosts",
-              "/etc/resolv.conf:/etc/resolv.conf"
+              "/etc/cloudbatch-taskgroup-hosts:/etc/cloudbatch-taskgroup-hosts"
             ]
           },
           "background": true
@@ -28,11 +24,7 @@
             "options": "--gpus all --network host",
             "volumes": [
               "/etc/ssh:/etc/ssh",
-              "/etc/cloudbatch-taskgroup-hosts:/etc/cloudbatch-taskgroup-hosts",
-              "/etc/google_instance_id:/etc/google_instance_id",
-              "/etc/hostname:/etc/hostname",
-              "/etc/hosts:/etc/hosts",
-              "/etc/resolv.conf:/etc/resolv.conf"
+              "/etc/cloudbatch-taskgroup-hosts:/etc/cloudbatch-taskgroup-hosts"
             ]
           }
         },
