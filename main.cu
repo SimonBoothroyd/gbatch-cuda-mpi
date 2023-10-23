@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <random>
 #include <array>
+#include <cstdlib>
 
 #include <mpi.h>
 #include <cuda_runtime.h>
@@ -67,6 +68,16 @@ int main(int argc, char *argv[]) {
 
     MPI_Bcast(data.data(), array_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     std::cout << rank << " received data" << std::endl;
+
+    // print our custom env variable to make sure all ranks have access to it.
+    const char* env_var_name = "MY_ENV_VAR";
+    char* value = getenv(env_var_name);
+
+    if (value) {
+        std::cout << env_var_name << " = " << value << std::endl;
+    } else {
+        std::cout << env_var_name << " not set." << std::endl;
+    }
 
     MPI_Finalize();
     return 0;
