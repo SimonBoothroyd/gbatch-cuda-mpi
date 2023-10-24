@@ -6,7 +6,7 @@
           "container": {
             "imageUri": "<TAG>",
             "entrypoint": "/bin/bash",
-            "commands": ["-c", "mkdir -p /run/sshd; /usr/sbin/sshd -p 4000 -D"],
+            "commands": ["-c", "env | egrep ^[A-Z]  | egrep -v \"^(HOME=|USER=|MAIL=|LC_ALL=|LS_COLORS=|LANG=|HOSTNAME=|PWD=|TERM=|SHLVL=|LANGUAGE=|_=|PWD=|OLDPWD=|SSH|BASH_FUNC|DBUS)\" >> /etc/environment; mkdir -p /run/sshd; /usr/sbin/sshd -p 4000 -D"],
             "options": "--gpus all --network host",
             "volumes": [
               "/etc/ssh:/etc/ssh",
